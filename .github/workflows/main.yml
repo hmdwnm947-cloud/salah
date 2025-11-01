@@ -12,23 +12,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup Flutter SDK
-      uses: subosito/flutter-action@v2
+    # 1. تثبيت Python (لضمان وجوده)
+    - name: Setup Python
+      uses: actions/setup-python@v5
       with:
-        channel: 'stable'
+        python-version: '3.10'
 
-    # 2. التثبيت والبناء في خطوة واحدة مع إجبار إضافة المسار
-    - name: Install Flet and Build APK (Final Solution)
-      run: |
-        # 1. تثبيت Flet (مع تجاهل رسالة عدم الكتابة)
-        pip install flet
-        
-        # 2. إضافة مسار الأدوات المثبتة بواسطة المستخدم إلى الـ PATH
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-        
-        # 3. الآن يجب أن تعمل أوامر flet
-        flet clean 
-        flet build apk --keep-app-resources
+    # 2. تثبيت Flutter (الأمر الرسمي لـ Flet)
+    - name: Install Flutter SDK
+      run: pip install flet && python3 -m flet.cli install-flutter
+
+    # 3. البناء مباشرة (لن نحتاج لـ flet clean هنا)
+    - name: Build APK
+      run: python3 -m flet build apk --keep-app-resources
         
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
