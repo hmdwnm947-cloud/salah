@@ -17,14 +17,18 @@ jobs:
       with:
         channel: 'stable'
 
-    # 2. التثبيت والبناء في خطوة واحدة مع استدعاء Python
-    - name: Install Flet and Build APK (Final Attempt)
+    # 2. التثبيت والبناء في خطوة واحدة مع إجبار إضافة المسار
+    - name: Install Flet and Build APK (Final Solution)
       run: |
+        # 1. تثبيت Flet (مع تجاهل رسالة عدم الكتابة)
         pip install flet
         
-        # استدعاء flet باستخدام أمر python -m لمنع خطأ المسار
-        python3 -m flet clean
-        python3 -m flet build apk --keep-app-resources
+        # 2. إضافة مسار الأدوات المثبتة بواسطة المستخدم إلى الـ PATH
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+        # 3. الآن يجب أن تعمل أوامر flet
+        flet clean 
+        flet build apk --keep-app-resources
         
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
