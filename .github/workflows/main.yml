@@ -1,4 +1,4 @@
-name: Build Flet Android App
+name: Robust Flet Android Build
 
 on:
   push:
@@ -12,17 +12,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    # 1. تثبيت Flutter
     - name: Setup Flutter SDK
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.19.6'
-        channel: 'stable'
+        channel: 'stable' # تم إزالة رقم الإصدار لزيادة المرونة
 
+    # 2. البناء مع التنظيف
     - name: Flet build APK
       run: |
         pip install flet
+        flet clean # أمر التنظيف المضاف
         flet build apk --keep-app-resources
-
+        
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
