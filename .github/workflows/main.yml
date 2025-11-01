@@ -12,20 +12,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # 1. تثبيت Flutter
     - name: Setup Flutter SDK
       uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
 
-    # 2. التثبيت والبناء في خطوة واحدة لضمان المسار (PATH)
-    - name: Install Flet and Build APK (Combined Step)
+    # 2. التثبيت والبناء في خطوة واحدة مع استدعاء Python
+    - name: Install Flet and Build APK (Final Attempt)
       run: |
         pip install flet
-        # يجب أن يكون هذا المسار هو المكان الذي يثبت فيه pip الملفات التنفيذية
-        export PATH=$PATH:$HOME/.local/bin 
-        flet clean 
-        flet build apk --keep-app-resources
+        
+        # استدعاء flet باستخدام أمر python -m لمنع خطأ المسار
+        python3 -m flet clean
+        python3 -m flet build apk --keep-app-resources
         
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
